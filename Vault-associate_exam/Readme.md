@@ -1,4 +1,7 @@
 ### Vault Certification Exam Practice Questions
+- [Vault Questions -Part1](#Part-1)
+- [Vault Questions -Part2](#Part-2)
+- [VSO Practice Questions](#vso-practice-questions)
 ___
 # Part 1
 
