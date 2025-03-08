@@ -652,4 +652,205 @@ Which of the following statements is true about Vault's auto-unseal feature?
 - ❌ Auto-unseal prevents unauthorized access to Vault
 - ❌ Auto-unseal replaces the need for authentication methods
 
+______
+
+## VSO Practice Questions
+
+### Question 65
+What is the primary function of the Vault Secrets Operator?
+
+- ❌ To replace Kubernetes Secrets
+- ❌ To allow applications to access Vault directly
+- ✅ To synchronize Vault secrets with Kubernetes Secrets
+- ❌ To deploy Kubernetes applications
+
+### Question 66
+How does VSO maintain secret availability after a restart?
+
+- ❌ By requesting new secrets from Vault each time
+- ✅ By using an encrypted client cache that persists secrets
+- ❌ By storing plaintext secrets in Kubernetes
+- ❌ By manually reapplying Kubernetes secrets
+
+### Question 67
+What feature ensures secrets are instantly updated in Kubernetes when Vault secrets change?
+
+- ❌ Manual refresh
+- ❌ Kubernetes CronJobs
+- ✅ Instant Updates feature in VSO
+- ❌ Kubernetes Secret Watcher
+
+### Question 68
+Which authentication methods are supported by the Vault Secrets Operator?
+
+- ❌ OAuth and SAML
+- ✅ Kubernetes-auth, AWS, GCP, JWT, and AppRole
+- ❌ Username and Password
+- ❌ LDAP and Kerberos
+
+### Question 69
+Why is secret transformation important in Vault Secrets Operator?
+
+- ❌ To encrypt secrets before storing them in Kubernetes
+- ✅ To format secrets according to application needs
+- ❌ To monitor Kubernetes Secrets
+- ❌ To manage user authentication
+
+### Question 70
+What is the function of `syncConfig.instantUpdates=true` in a VaultStaticSecret definition?
+
+- ❌ Enables the secret to be stored as a Kubernetes Secret
+- ✅ Allows real-time synchronization when the Vault secret changes
+- ❌ Encrypts the Kubernetes Secret for additional security
+- ❌ Disables Vault secret updates to prevent unauthorized access
+
+### Question 71
+Which Vault capability is required in a policy to allow instant updates?
+
+- ❌ `update`
+- ❌ `create`
+- ✅ `subscribe`
+- ❌ `list`
+
+### Question 72
+Which of the below commands can be used to verify that VaultStaticSecret is subscribed to Vault event notifications?
+
+- ❌ `vault kv list sys/events/subscribe/kv`
+- ❌ `kubectl get vaultstaticsecret`
+- ✅ `kubectl describe vaultstaticsecret <secret-name>`
+- ❌ `vault read kv/data/sys/events`
+
+### Question 73
+What is the purpose of Secret Transformation in VSO?
+
+- ❌ To encrypt secrets before storing them in Kubernetes
+- ✅ To modify, filter, or format Vault secrets before writing them to Kubernetes Secrets
+- ❌ To automatically rotate secrets based on policies
+- ❌ To enable secrets to be stored in multiple namespaces
+
+### Question 74
+In the transformation section of a VaultStaticSecret, which field is used to exclude all secret values except specific ones?
+
+- ❌ `includes`
+- ✅ `excludes`
+- ❌ `filters`
+- ❌ `transformations`
+
+### Question 75
+Given the following VaultStaticSecret transformation template, what will be stored in Kubernetes Secrets?
+
+```yaml
+transformation:
+  excludes:
+    - ".*"
+  templates:
+    custom_key:
+      text: "Secret username: {{ .Secrets.username }}"
+```
+
+- ✅ Only the username field
+- ❌ The entire secret from Vault
+- ❌ The username and password fields
+- ❌ The Kubernetes secret will be empty
+
+### Question 76
+What is the main difference between VaultDynamicSecret & VaultStaticSecret in VSO?
+
+- ✅ VaultDynamicSecret syncs dynamic secrets like database credentials, whereas VaultStaticSecret syncs static secrets like API keys
+- ❌ VaultDynamicSecret stores secrets in Vault, while VaultStaticSecret stores secrets in Kubernetes
+- ❌ VaultStaticSecret supports instant updates, but VaultDynamicSecret does not
+- ❌ VaultDynamicSecret can only be used for AWS and GCP secrets
+
+### Question 77
+Which of the following is a valid VaultDynamicSecret resource definition for syncing PGSQL credentials?
+
+#### Option A (✅ Correct Answer)
+```yaml
+apiVersion: secrets.hashicorp.com/v1beta1
+kind: VaultDynamicSecret
+metadata:
+  name: example-db-secret
+spec:
+  path: creds/db-role
+  destination:
+    create: true
+    name: app-secret
+```
+
+#### Option B
+```yaml
+apiVersion: secrets.hashicorp.com/v1beta1
+kind: VaultStaticSecret
+metadata:
+  name: example-db-secret
+spec:
+  path: creds/db-role
+  destination:
+    create: true
+    name: app-secret
+```
+
+#### Option C
+```yaml
+apiVersion: secrets.hashicorp.com/v1beta1
+kind: VaultDynamicSecret
+metadata:
+  name: example-db-secret
+spec:
+  path: kv/data/db-role
+  destination:
+    create: false
+```
+
+#### Option D
+```yaml
+apiVersion: secrets.hashicorp.com/v1beta1
+kind: VaultSecret
+metadata:
+  name: example-db-secret
+spec:
+  path: creds/db-role
+```
+
+### Question 78
+Which of the following is required for the Vault Secrets Operator to work in Kubernetes?
+
+- ❌ A Kubernetes cluster running Vault as a sidecar
+- ❌ Vault installed in the same cluster as VSO
+- ❌ Kubernetes must have native support for Vault secrets
+- ✅ VaultAuth must be configured for the operator to authenticate to Vault
+
+### Question 79
+What is the purpose of the `vaultAuthRef` field in a VSO resource definition?
+
+- ✅ It defines the authentication method used by VSO to connect to Vault
+- ❌ It specifies the namespace where the Kubernetes Secret will be created
+- ❌ It enables automatic rotation of secrets
+- ❌ It tells VSO which Kubernetes service account to use
+
+### Bonus: Scenario-Based Questions
+
+### Question 80
+You have a K8s app requiring frequent updates to API keys stored in Vault. Which VSO feature should you enable?
+
+- ❌ Secret Transformation
+- ✅ Instant Updates
+- ❌ Encrypted Client Cache
+- ❌ Dynamic Secret Syncing
+
+### Question 81
+Your security team wants to ensure Vault secrets synced to K8s remain encrypted in memory. Which VSO feature would help with this?
+
+- ❌ Instant Updates
+- ❌ Secret Transformation
+- ✅ Encrypted Client Cache
+- ❌ Role-Based Access Control
+
+### Question 82
+An app requires a specific format for DB credentials stored in K8s Secrets. Which VSO feature would help you modify the secret structure before storing it in Kubernetes?
+
+- ❌ Dynamic Secret Syncing
+- ✅ Secret Transformation
+- ❌ Instant Updates
+- ❌ Encrypted Client Cache
 
